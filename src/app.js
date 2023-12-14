@@ -36,6 +36,7 @@ app.use(morgan("dev"))
 /*cookieParser es para que express pueda convertir las cookies que llegan a un formato json*/ 
 app.use(cookieParser())
 
+
 app.use('/api', routerAuth)
 app.use('/api',routerProducts)
 app.use('/api',paymentRoutes)

@@ -2,22 +2,22 @@
     "version":2,
     "builds":[
         {
-            "src":"./src/app.js",
+            "src":"/src/app.js",
             "use":"@vercel/node"
         }
     ],
     "routes":[
         {
             "src":"/api(.routerAuth,routerProducts,paymentRoutes*)",
-            "dest":"./src/app.js"
+            "dest":"/src/app.js"
         },
         {
             "src":"/api/(.*)",
-            "dest":"./src/app.js"
+            "dest":"/src/app.js"
         },
         {
             "src":"/(.*)",
-            "dest":"./src/app.js"
+            "dest":"/src/app.js"
         }
     ]
 }
