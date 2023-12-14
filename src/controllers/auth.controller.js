@@ -24,7 +24,7 @@ class userController{
              res.json(saveUser)
            } catch (error) {
             
-            res.status(404).json({message:"Error"})
+            res.status(500).json({error:error.response})
            }
     }
     async login(req,res){
@@ -48,7 +48,7 @@ class userController{
              res.cookie('token',token)
              res.json(userFound)
         } catch (error) {
-            res.status(404).json({message: error.message})
+            res.status(500).json({error:error.response})
         }
     }
     async verifyToken(req,res){
@@ -101,7 +101,7 @@ if(!token)
             }
                res.json(foundProfile)
         } catch (error) {
-            
+            res.status(500).json({error:error.response})
         }
     }
     async getUser(req,res){
@@ -113,30 +113,37 @@ if(!token)
             }
              res.json(foundUser)
         } catch (error) {
-            
+            res.status(500).json({error:error.response})
         }
     }
     async addAddressUser(req,res){
         try {
+        /*en req.user esta el usuario que esta haciendo la peticion, esto se
+        establece en el middleware authRequired*/
             const userID = req.user.id
           const {estado,municipio,cp,colonia,calle,numerodecasa, telefono}  = req.body 
           const user = await User.findById(userID)
-           if(!user.address){
-             user.address = []
-           }
+          
+          if(!user.address){
+          user.address = []
+          }
           user.address.push({
-            estado,
-            municipio,
-            cp,
-            colonia,
-            calle,
-            numerodecasa,
-            telefono
-          })
+          estado,
+          municipio,
+          cp,
+          colonia,
+          calle,
+          numerodecasa,
+          telefono
+          }
+          )
           const saveAddress = await user.save()
           res.json(saveAddress)
+         
         } catch (error) {
-            
+            /*el codigo 500 le indica al cliente, que hubo un error interno del
+            servidor*/ 
+         res.status(500).json({error:error.response})   
         }
     }
 

@@ -1,5 +1,6 @@
 import dotenv from "dotenv"
 import mercadopago from "mercadopago"
+import User from "../models/users.model.js"
 
 dotenv.config()
 
@@ -7,9 +8,19 @@ mercadopago.configure({
     access_token: process.env.ACCES_TOKEN_MERCADOPAGO
 })
 
-const Payment = (req,res)=>{
+const Payment = async (req,res)=>{
+     /*en req.user.id esta el usuario que realizo la peticion, este se establecio en
+    el middleware authRequired, y por eso esta disponible*/ 
+    const user = req.user.id
+
+    /*se destructura el objeto que llega desde el cliente, que contiene las
+    propiedades product y address*/
     const product = req.body
-    const user = req.user
+   
+    /*En la bd se busca ese usuario por el id*/ 
+    const foundUser = await User.findById(user)
+    
+
 let preference = {
     items:[
         {
@@ -23,16 +34,19 @@ let preference = {
             unit_price:product.price
         }
     ],
-    payer:{
-       name:user.username,
-       email:user.email,
-       address:{
-        state:user.address[0].state,
-        municipio:user.address[0].municipio,
-        colonia:user.address[0].colonia,
-        calle:user.address[0].calle
-       }
-    },
+    // payer:{
+    //   phone:{
+    //     number:parseInt(address.telefono)
+    //   },
+    //   address:{
+    //     zip_code:address.cp,
+    //     street_name:address.calle,
+    //     state:address.estado,
+    //     city:address.municipio
+    //   },
+    //   email:foundUser.email,
+    //   name:foundUser.username
+    // },
     back_urls: {
         success:"http://localhost:3000",
         failure:"",
@@ -41,7 +55,8 @@ let preference = {
     auto_return:'approved',
     binary_mode:true
 }
-mercadopago.preferences.create(preference).then((response)=>res.status(200).send({response}))
+
+mercadopago.preferences.create(preference).then((response)=>res.status(200).send({response})).catch((error)=>console.log('error',error))
 }
 
 export default Payment

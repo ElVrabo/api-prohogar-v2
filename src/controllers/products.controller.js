@@ -57,34 +57,13 @@ class productsController{
             
         }
     }
-    async searchProductsOnSale(req,res){
+    async filterProductsName(req,res){
         try {
-            const product = req.query.nameProduct
-            /*Se crear una expresion regular usando el patron basado en el valor que mande
-            el cliente desde la query, la 'i' significa que la busqueda sea insensible a 
-            mayusculas y minusculas*/ 
-            const regex = new RegExp(product,'i')
-
-            /*En la coleccion se buscaran aquellos productos que en su propiedad name
-            coincida con la expresion regular que se creo en base al valor que llega del
-            cliente. Es decir, si en la propiedad name hay un producto "base de cama, y la query
-            que viene del cliente es "cama", recuperara ese documento ya que cama es parte de ese
-            valor"*/ 
-            const foundProductOnSale = await ProductsOnSale.find({name:regex})
-            if(!foundProductOnSale || foundProductOnSale.length === 0){
-                res.status(404).json({error:"No se encontro el producto"})
-            }
-                res.json(foundProductOnSale)
-        } catch (error) {
-                
-        }
-    }
-    async filterProductsCategory(req,res){
-        try {
-            const category = req.query.categoryProduct
-            const foundProducts = await ProductsOnSale.find({category})
+            const productName = req.query.productName
+            const regex = new RegExp(productName,'i')
+            const foundProducts = await ProductsOnSale.find({name:regex})
             if(!foundProducts || foundProducts.length === 0){
-                res.status(404).json({error:"Por el momento no hay productos en esta categoria"})
+                res.status(404).json({error:"No se encontro el producto"})
                
             }
             res.json(foundProducts)
