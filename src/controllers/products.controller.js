@@ -50,7 +50,7 @@ class productsController{
         try {
          const foundProductOnSale = await ProductsOnSale.findByIdAndDelete(id)
          if(!foundProductOnSale){
-            return res.status(404).json({message:"No se encontro el prodcuto"})
+            return res.status(404).json({message:"No se encontro el producto"})
          }
          return res.status(200)
         } catch (error) {
@@ -59,7 +59,7 @@ class productsController{
     }
     async filterProductsName(req,res){
         try {
-            const productName = req.query.productName
+            const productName = req.query.ProductName
             const regex = new RegExp(productName,'i')
             const foundProducts = await ProductsOnSale.find({name:regex})
             if(!foundProducts || foundProducts.length === 0){

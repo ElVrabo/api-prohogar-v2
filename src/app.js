@@ -8,9 +8,13 @@ import paymentRoutes from "./routes/payment.routes.js"
 import {fileURLToPath} from "url"
 import { dirname } from 'path';
 import  path  from "path"
+import { connectDataBase } from "./db.js"
+import routerProviderProducts from "./routes/providerProducts.routes.js"
 
 
 const app = express()
+
+connectDataBase()
 
 /*import.meta.url proporciona la URL del modulo actual, la funcion fileURLToPath toma esa url
 y la convierte en una ruta de sistema de archivos, asi que se esta obteniendo la ruta completa
@@ -39,6 +43,7 @@ app.use(cookieParser())
 
 app.use('/api', routerAuth)
 app.use('/api',routerProducts)
+app.use('/api',routerProviderProducts)
 app.use('/api',paymentRoutes)
 
 export default app

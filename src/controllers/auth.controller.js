@@ -146,6 +146,9 @@ if(!token)
          res.status(500).json({error:error.response})   
         }
     }
+    async test(req,res){
+        res.json({message:"funcion"})
+    }
 
 }
 
