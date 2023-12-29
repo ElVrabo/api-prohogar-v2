@@ -12,7 +12,7 @@ export const authRequired = (req,res,next)=> {
         /*si existen un error el verificar el token va a responder con un 
         status 401 y un mensaje de token invalido*/
         if(err) return res.status(401).json({message:"token invalido"})
-    
+        
         /*Si el token es verificado correctamente, se guardara ese usuario en req.user, que es
         la peticion del usuario que esta llegando, lo que hace que esten disponibles para cualquier
         controlador posteriores que manejen la solicitud, en este caso esta disponible para los

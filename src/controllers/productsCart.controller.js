@@ -1,4 +1,4 @@
-import Product from "../models/products.model.js"
+import Product from "../models/productsCart.model.js"
 export const getProductsCart=async(req,res)=>{
     try {
        /*Busca en el modelo Product unicamente los productos que le pertenezcan al 
@@ -15,7 +15,7 @@ export const getProductsCart=async(req,res)=>{
         res.json({error:error.message})
     }
 }
-export const addProductsCart=async(req,res)=>{
+export const addProductCart=async(req,res)=>{
     try {
         const {name,description,price,image,date} = req.body
         const addProductCart = new Product({
@@ -36,7 +36,7 @@ export const addProductsCart=async(req,res)=>{
         res.json({error:error.message})
     }
 }
- export const deleteProductsCart=async(req,res)=>{
+ export const deleteProductCart=async(req,res)=>{
     try {
         const productFound = await Product.findByIdAndDelete(req.params.id)
         if(!productFound){

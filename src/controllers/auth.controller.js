@@ -21,13 +21,13 @@ class userController{
                 password:passwordHash
             }) 
             const saveUser = await createUser.save()
-             res.json(saveUser)
+             res.status(201).json(saveUser)
            } catch (error) {
             
             res.status(500).json({error:error.response})
            }
     }
-    async login(req,res){
+    async loginUser(req,res){
         try {
             const {username,password} = req.body
             const userFound = await User.findOne({username})
@@ -46,7 +46,7 @@ class userController{
             /*Y se va a establecer en el navegador una cookie llamada token y su valor sera el
             token creado */ 
              res.cookie('token',token)
-             res.json(userFound)
+             res.status(201).json(userFound)
         } catch (error) {
             res.status(500).json({error:error.response})
         }
@@ -68,7 +68,7 @@ if(!token)
         (por ejemplo, si el token está caducado o inválido),
          responde con un estado de error 401 (No autorizado) 
          y un mensaje indicando que la autorización ha fallado.*/ 
-        if(err) return res.status(401).json({message:"no autorizado"})
+        if(err) return res.status(401).json({message:"no estas autorizado"})
 
         /*Si el token es válido, utiliza el user.id del token decodificado para 
         buscar el usuario que inicio sesion en la base de datos */ 
@@ -79,13 +79,18 @@ if(!token)
 
         /*si se encuentra el usuario, respondera en un json con la informacion
         de ese usuario que inicio sesion*/ 
-        return res.json(userFound)
+        return res.status(200).json(userFound)
     })
     }
-    async editProfile(req,res){
+    async editUser(req,res){
         try {
             const id = req.params.id
-            const newProfile = req.body
+            const {username,email} = req.body
+            const newProfile = {
+                username,
+                email,
+            }
+           
             /*si en la peticion viene un archivo, entonces agregara el nombre de ese
             archivo a una propiedad nombrada avatar*/ 
             if(req.file){
@@ -99,9 +104,10 @@ if(!token)
             if(!foundProfile){
                 res.status(404).json({error:'El usuario no fue encontrado'})
             }
-               res.json(foundProfile)
+               res.status(204).json({message:"Informacion guardada"})
         } catch (error) {
             res.status(500).json({error:error.response})
+            
         }
     }
     async getUser(req,res){
@@ -109,14 +115,14 @@ if(!token)
             const userID = req.params.id
             const foundUser = await User.findById(userID)
             if(!foundUser){
-                res.status(404).json({error:"El usuario no se encontro"})
+                return res.status(404).json({error:"El usuario no se encontro"})
             }
-             res.json(foundUser)
+             res.status(200).json(foundUser)
         } catch (error) {
             res.status(500).json({error:error.response})
         }
     }
-    async addAddressUser(req,res){
+    async createAddressUser(req,res){
         try {
         /*en req.user esta el usuario que esta haciendo la peticion, esto se
         establece en el middleware authRequired*/
@@ -137,8 +143,8 @@ if(!token)
           telefono
           }
           )
-          const saveAddress = await user.save()
-          res.json(saveAddress)
+          await user.save()
+          res.status(201)
          
         } catch (error) {
             /*el codigo 500 le indica al cliente, que hubo un error interno del
@@ -146,9 +152,30 @@ if(!token)
          res.status(500).json({error:error.response})   
         }
     }
-    async test(req,res){
-        res.json({message:"funcion"})
+    async changePasswordUser(req,res){
+        const id = req.user.id
+        const {currentPassword,newPassword,confirmNewPassword} = req.body
+      try {
+        const foundUser = await User.findById(id)
+        const comparePassword = await bcrypt.compare(currentPassword,foundUser.password)
+        if(comparePassword !== true){
+            return res.status(400).json({error:"La contraseña actual no coincide"})
+        }
+        if(newPassword === confirmNewPassword){
+            const hashNewPassword = await bcrypt.hash(newPassword,10)
+            foundUser.password = hashNewPassword
+            await foundUser.save()
+             res.status(201).json({message:"La contraseña se cambio con exito"})
+        }
+         res.status(400).json({error:"Verifica que tu nueva contraseña coincida"})
+         console.log('Las contraseñas no coinciden')
+      } catch (error) {
+        
+      }
     }
+    
+
+
 
 }
 

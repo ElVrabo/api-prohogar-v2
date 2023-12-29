@@ -26,7 +26,8 @@ const schemaProducts = new mongoose.Schema({
         un objectID que se relaciona con un documento en la coleccion 'User'*/ 
         ref:'User',
         required:true
-    }
+    },
+
 })
 
 export default mongoose.model('Product',schemaProducts)

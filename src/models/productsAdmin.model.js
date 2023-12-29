@@ -31,6 +31,9 @@ const schemaProductsAdmin = new mongoose.Schema({
     },
     image:{
         type:String,
+    },
+    reviews:{
+        type:Array,
     }
   
 

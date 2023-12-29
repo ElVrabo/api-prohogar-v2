@@ -19,9 +19,11 @@ import mongoose from "mongoose"
     },
     rfc:{
         type:String,
+        
     },
     gmail:{
         type:String,
+        
     },
     date:{
         type:Date,

@@ -1,33 +1,37 @@
 
 import ProductsOnSale from "../models/productsAdmin.model.js"
+import User from "../models/users.model.js"
 
-class productsController{
+
  
-    async getProductsOnSale(req,res){
+   export async function getProducts(req,res){
         try {
             const productsOnSale = await ProductsOnSale.find()
-            res.json(productsOnSale)
+            if(productsOnSale.length < 0){
+                return res.status(404).json({error:"No se encontro ningun producto"})
+            }
+             res.status(200).json(productsOnSale)
         } catch (error) {
-            res.status(404).json({message:error.message})
+            res.status(500).json({message:error.message})
         }
     }
-    async getProductOnSale(req,res){
+   export async function  getProductById(req,res){
         try {
             const id = req.params.id
             const foundProduct = await ProductsOnSale.findById(id)
             if(!foundProduct){
-                res.status(404).json({error:"No se encontro el producto"})
+                return res.status(404).json({error:"No se encontro el producto"})
             }
-               res.json(foundProduct)
+               res.status(200).json(foundProduct)
         } catch (error) {
            
         }
     }
-    async addProductsOnSale(req,res){
+    export async function createProduct(req,res){
         try {
-        const {name,price,description,specifications,stock,category,date} = req.body
-        /*req.file.filename es el nombre del archivo que viene de la peticion*/
-        const image = req.file.filename
+            const {name,price,description,specifications,stock,category,date} = req.body
+            /*req.file.filename es el nombre del archivo que viene de la peticion*/
+            const image = req.file.filename
         const createProductOnSale = new ProductsOnSale({
             name:name,
             price,
@@ -37,27 +41,29 @@ class productsController{
             stock,
             category,
             date,
+
             image
         })
         const savedProductOnSale = await createProductOnSale.save()
-        res.json(savedProductOnSale)
+        res.status(201).json({message:"EL producto se agrego correctamente"})
+        
         } catch (error) {
-        res.json({message: error.message})
+        
         }
     }
-    async deleteProducsOnSale(req,res){
+    export async function  deleteProduct(req,res){
         const {id} = req.params
         try {
          const foundProductOnSale = await ProductsOnSale.findByIdAndDelete(id)
          if(!foundProductOnSale){
-            return res.status(404).json({message:"No se encontro el producto"})
+             res.status(404).json({message:"No se encontro el producto"})
          }
-         return res.status(200)
+            res.status(200).json({message:"El producto se elimino correctamente"})
         } catch (error) {
             
         }
     }
-    async filterProductsName(req,res){
+    export async function  filterProductByName(req,res){
         try {
             const productName = req.query.ProductName
             const regex = new RegExp(productName,'i')
@@ -66,12 +72,12 @@ class productsController{
                 res.status(404).json({error:"No se encontro el producto"})
                
             }
-            res.json(foundProducts)
+            res.status(200).json(foundProducts)
         } catch (error) {
             
         }
     }
-    async editProductsOnSale(req,res){
+    export async function editProduct(req,res){
         try {
             const {id} = req.params
             const updateProduct = req.body
@@ -90,12 +96,12 @@ class productsController{
             if (!foundProduct){
                 res.status(404).json(['No se encontro el producto a editar'])
             }
-                res.json(foundProduct)
+                res.status(201).json({message:"El producto se actualizo con exito"})
         } catch (error) {
             
         }
     }
+   
  
-}
 
-export default productsController
+

@@ -1,15 +1,20 @@
 import express from "express"
 import morgan from "morgan"
 import cors from "cors"
-import routerAuth from "./routes/auth.routes.js"
 import cookieParser from "cookie-parser"
-import routerProducts from "./routes/products.routes.js"
 import paymentRoutes from "./routes/payment.routes.js"
 import {fileURLToPath} from "url"
 import { dirname } from 'path';
 import  path  from "path"
 import { connectDataBase } from "./db.js"
-import routerProviderProducts from "./routes/providerProducts.routes.js"
+import orderProductsRoutes from "./routes/orderProducts.routes.js"
+import authRoutes from "./routes/user/auth.routes.js"
+import productsRoutes from "./routes/admin/products.routes.js"
+import productsCartRoutes from "./routes/user/productsCart.routes.js"
+import providerProductsRoutes from "./routes/admin/providerProducts.routes.js"
+import favoriteProductsRoutes from "./routes/user/favoritesProducts.routes.js"
+import employeesRoutes from "./routes/admin/employees.routes.js"
+
 
 
 const app = express()
@@ -41,9 +46,13 @@ app.use(morgan("dev"))
 app.use(cookieParser())
 
 
-app.use('/api', routerAuth)
-app.use('/api',routerProducts)
-app.use('/api',routerProviderProducts)
+app.use('/api', authRoutes)
+app.use('/api',productsRoutes)
+app.use('/api',productsCartRoutes)
+app.use('/api',providerProductsRoutes)
+app.use('/api', favoriteProductsRoutes)
 app.use('/api',paymentRoutes)
+app.use('/api',orderProductsRoutes)
+app.use('/api',employeesRoutes)
 
 export default app
