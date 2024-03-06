@@ -70,7 +70,7 @@ import User from "../models/users.model.js"
             const foundProducts = await ProductsOnSale.find({name:regex})
             if(!foundProducts || foundProducts.length === 0){
                 res.status(404).json({error:"No se encontro el producto"})
-               
+               return
             }
             res.status(200).json(foundProducts)
         } catch (error) {

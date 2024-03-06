@@ -43,3 +43,42 @@ export const deleteEmployee = async(req,res)=>{
     
    }
 }
+
+export const editEmployee = async(req,res)=>{
+  const employeeID = req.params.id
+  const {username,age,phone,rol} = req.body
+  const bodyEmployee = {
+    username,
+    age,
+    phone,
+    rol
+  }
+  try {
+    await Employees.findByIdAndUpdate(
+    employeeID,
+    bodyEmployee,
+    {new:true}
+   )
+   res.status(200).json({message:"El empleado se actualizo con exito"})
+  } catch (error) {
+    
+  }
+}
+export const filterEmployee = async (req,res)=>{
+  const employee = req.query.employee
+  try {
+  
+      const regex = new RegExp(employee,'i')
+      const foundEmployees = await Employees.find({username: regex})
+      if(!foundEmployees || foundEmployees.length === 0){
+      res.status(404).json({error:"No se encontro al empleado"})
+      return 
+      }else{
+    
+        res.status(200).json(foundEmployees)
+      }
+   
+  } catch (error) {
+    
+  }
+}
