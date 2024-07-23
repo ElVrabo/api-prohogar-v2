@@ -18,8 +18,9 @@ const Payment = async (req,res)=>{
      const foundUser = await User.findById(user)
     /*se destructura el objeto que llega desde el cliente, que contiene las
     propiedades product y address*/
-    const {id,name,description,price,image,estado,municipio,colonia} = req.body
+    const {id,name,description,price,image} = req.body
    
+    
    
 
 let preference = {
@@ -35,9 +36,10 @@ let preference = {
             unit_price:price
         }
     ],
+    external_reference: id,
     back_urls: {
-        success:"http://localhost:3000",
-        failure:"",
+        success:"http://localhost:3000/successPayment",
+        failure:"http://localhost:3000/errorPayment",
         pending:""
     },
     auto_return:'approved',
@@ -46,7 +48,9 @@ let preference = {
 try {
     const createPreferences = await mercadopago.preferences.create(preference)
     const response = await createPreferences.response
+    console.log(response)
     res.status(200).send(response)
+
     // req.client = user
     // req.information = {name,description,price,image,estado,municipio,colonia}
 } catch (error) {

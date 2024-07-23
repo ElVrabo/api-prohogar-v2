@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const schemaProductsAdmin = new mongoose.Schema({
+    image:{
+        type:String,
+        required:true,
+    },
     name:{
         type:String,
         required:true
@@ -11,10 +15,6 @@ const schemaProductsAdmin = new mongoose.Schema({
     },
     description:{
         type:String,
-        required:true
-    },
-    specifications:{
-        type:Array,
         required:true
     },
     stock:{
@@ -29,12 +29,8 @@ const schemaProductsAdmin = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
-    image:{
-        type:String,
-    },
-    reviews:{
-        type:Array,
-    }
+  
+   
   
 
 })

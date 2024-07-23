@@ -29,26 +29,26 @@ import User from "../models/users.model.js"
     }
     export async function createProduct(req,res){
         try {
-            const {name,price,description,specifications,stock,category,date} = req.body
+            const {image,name,price,description,stock,category,date} = req.body
             /*req.file.filename es el nombre del archivo que viene de la peticion*/
-            const image = req.file.filename
         const createProductOnSale = new ProductsOnSale({
+            image,
             name:name,
             price,
             description,
             /*specifications es un array que viene desde la peticion*/ 
-            specifications,
             stock,
             category,
             date,
 
-            image
+            
         })
+      
         const savedProductOnSale = await createProductOnSale.save()
         res.status(201).json({message:"EL producto se agrego correctamente"})
         
         } catch (error) {
-        
+       
         }
     }
     export async function  deleteProduct(req,res){
@@ -81,12 +81,6 @@ import User from "../models/users.model.js"
         try {
             const {id} = req.params
             const updateProduct = req.body
-            /* verificar si hay un nuevo archivo en la solicitud*/ 
-            if(req.file){
-                /*actualizar la propiedad image con el nombre del archivo que viene desde la
-                peticion*/ 
-                updateProduct.image = req.file.filename
-            }
             const foundProduct = await ProductsOnSale.findByIdAndUpdate(
                 id,
                 updateProduct,
@@ -95,6 +89,7 @@ import User from "../models/users.model.js"
             ) 
             if (!foundProduct){
                 res.status(404).json(['No se encontro el producto a editar'])
+                return
             }
                 res.status(201).json({message:"El producto se actualizo con exito"})
         } catch (error) {

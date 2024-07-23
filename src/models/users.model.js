@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const usersSchema = new mongoose.Schema({
+    image:{
+      type:String,
+    },
     email:{
     type:String,
     required:true
@@ -17,12 +20,7 @@ const usersSchema = new mongoose.Schema({
         type:Date,
         default:Date.now()
      },
-     avatar:{
-      type:String,
-     },
-     address:{
-      type: Array
-     }
+ 
 })
 
 export default mongoose.model('User',usersSchema)

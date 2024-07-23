@@ -35,16 +35,14 @@ export async function filterProviderProduct(req,res){
     const providerName = req.query.ProviderName
     const regex = new RegExp(providerName,'i')
   try {
-    const foundProviderName = await providerProducts.find({razon_social:regex})
+    const foundProviderName = await providerProducts.find({name:regex})
     if(!foundProviderName || foundProviderName.length === 0) {
     res.status(404).json({message:"No se encontro al vendedor"})
-    console.log('No se encontro al vendedor')
     return
     }
     res.status(200).json(foundProviderName)
-    console.log('Los vendedores encontrados son', foundProviderName)
   } catch (error) {
-    console.log(error)
+
   }
 }
 export async function deleteProviderProduct(req,res){

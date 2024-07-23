@@ -1,0 +1,43 @@
+{
+    "builds":[
+        {
+            "src":"src/app.js",
+            "use":"@vercel/node"
+        }
+    ],
+    "routes":[
+        {
+            "src":"/api/editUser",
+            "dest":"src/app.js"
+        },
+           {
+            "src":"/api/getUser",
+            "dest":"src/app.js"
+           },
+           {
+            "src":"/api/changePasswordUser",
+            "dest":"src/app.js"
+           },
+           {
+            "src":"/api/productsCart",
+            "dest":"src/app.js"
+           },
+           {
+            "src":"/api/verify",
+            "dest":"src/app.js"
+           },
+         {
+            "src":"/api/(employees,filterEmployees,productsOnSale,productOnSale,filterProductsByName,providerProducts,filterProviderProducts,register,login)(.*)",
+            "dest":"src/app.js"
+         },
+         {
+            "src":"/api/(.*)",
+            "dest":"src/app.js"
+         },
+
+        {
+            "src":"/(.*)",
+            "dest":"src/app.js"
+        }
+    ]
+}

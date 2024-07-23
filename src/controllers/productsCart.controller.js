@@ -18,7 +18,7 @@ export const getProductsCart=async(req,res)=>{
 export const addProductCart=async(req,res)=>{
     try {
         const {name,description,price,image,date} = req.body
-        const addProductCart = new Product({
+        const newProductCart = new Product({
             name,
             description,
             price,
@@ -30,7 +30,7 @@ export const addProductCart=async(req,res)=>{
             y se accede a la propiedad id de ese usuario*/ 
             user:req.user.id
         })
-        const saveProductCart = await addProductCart.save()
+        const saveProductCart = await newProductCart.save()
         res.json(saveProductCart)
     } catch (error) {
         res.json({error:error.message})
@@ -40,6 +40,7 @@ export const addProductCart=async(req,res)=>{
     try {
         const productFound = await Product.findByIdAndDelete(req.params.id)
         if(!productFound){
+          
             return res.status(404).json(['No se encontro el producto'])
         }
            return res.status(200)

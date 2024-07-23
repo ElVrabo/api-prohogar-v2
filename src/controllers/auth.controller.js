@@ -9,9 +9,13 @@ class userController{
     async registerUser(req,res){
         try {
             const {email,username,password,date} = req.body
-            const userFound = await User.findOne({email})
-            if(userFound){
-                return res.status(404).json(['El email ya esta en uso'])
+            const userFoundEmail = await User.findOne({email})
+            const userFoundUsername = await User.findOne({username})
+            if(userFoundEmail){
+                return res.status(404).json(['El email o el username ya estan en uso'])
+            }
+            if(userFoundUsername){
+                return res.status(404).json(['El nombre de usuario ya esta en uso'])
             }
             const passwordHash = await bcrypt.hash(password,10)
             const createUser = new User({
@@ -23,7 +27,7 @@ class userController{
             const saveUser = await createUser.save()
              res.status(201).json(saveUser)
            } catch (error) {
-            
+         
             res.status(500).json({error:error.response})
            }
     }
@@ -40,20 +44,26 @@ class userController{
             if(!isMatch){
                 return res.status(404).json(['La contraseña es incorrecta'])
             }
+            
             /*Si las credenciales del usuario son correctas, entonces se crea un token de acceso
             con el id del usuario encontrado*/ 
             const token=await createAccesToken({id:userFound._id})
             /*Y se va a establecer en el navegador una cookie llamada token y su valor sera el
             token creado */ 
-             res.cookie('token',token)
-             res.status(201).json(userFound)
+            res.cookie('token',token)
+            //  res.cookie('token',token , {
+            //     httpOnly: true,
+            //     secure: true, // Se habilita esto si se está usando HTTPS
+            //     sameSite: 'None' // Necesario para permitir cookies cuando el front y back estan en diferentes dominios
+            //  } )
+             return res.status(201).json(userFound)
         } catch (error) {
             res.status(500).json({error:error.response})
         }
     }
     async verifyToken(req,res){
 
-        const {token}=req.cookies
+        const {token} = req.cookies
 
 /*Si no se encuentra ningún token que manda el cliente, responde con un estado de error 401 
 (No autorizado) y un mensaje indicando que el usuario no está autorizado.*/ 
@@ -85,22 +95,18 @@ if(!token)
     async editUser(req,res){
         try {
             const id = req.params.id
-            const {username,email} = req.body
+            const {image,username,email} = req.body
             const newProfile = {
+                image,
                 username,
                 email,
-            }
-           
-            /*si en la peticion viene un archivo, entonces agregara el nombre de ese
-            archivo a una propiedad nombrada avatar*/ 
-            if(req.file){
-                newProfile.avatar = req.file.filename
             }
             const foundProfile = await User.findByIdAndUpdate(
                id,
                newProfile,
                {new:true}
             )
+           
             if(!foundProfile){
                 res.status(404).json({error:'El usuario no fue encontrado'})
             }
@@ -168,7 +174,6 @@ if(!token)
              res.status(201).json({message:"La contraseña se cambio con exito"})
         }
          res.status(400).json({error:"Verifica que tu nueva contraseña coincida"})
-         console.log('Las contraseñas no coinciden')
       } catch (error) {
         
       }
