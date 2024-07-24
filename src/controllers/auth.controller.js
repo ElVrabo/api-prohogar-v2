@@ -50,12 +50,12 @@ class userController{
             const token=await createAccesToken({id:userFound._id})
             /*Y se va a establecer en el navegador una cookie llamada token y su valor sera el
             token creado */ 
-            res.cookie('token',token)
-            //  res.cookie('token',token , {
-            //     httpOnly: true,
-            //     secure: true, // Se habilita esto si se está usando HTTPS
-            //     sameSite: 'None' // Necesario para permitir cookies cuando el front y back estan en diferentes dominios
-            //  } )
+            // res.cookie('token',token)
+             res.cookie('token',token , {
+                httpOnly: true,
+                secure: true, // Se habilita esto si se está usando HTTPS
+                sameSite: 'None' // Necesario para permitir cookies cuando el front y back estan en diferentes dominios
+             } )
              return res.status(201).json(userFound)
         } catch (error) {
             res.status(500).json({error:error.response})

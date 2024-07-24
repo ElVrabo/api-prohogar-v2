@@ -36,26 +36,45 @@ let preference = {
             unit_price:price
         }
     ],
-    external_reference: id,
     back_urls: {
         success:"http://localhost:3000/successPayment",
         failure:"http://localhost:3000/errorPayment",
         pending:""
     },
     auto_return:'approved',
+    notification_url:'https://api-ecommerce-prohogar.vercel.app/api/webhooks',
     binary_mode:true
 }
 try {
     const createPreferences = await mercadopago.preferences.create(preference)
     const response = await createPreferences.response
-    console.log(response)
     res.status(200).send(response)
 
     // req.client = user
     // req.information = {name,description,price,image,estado,municipio,colonia}
 } catch (error) {
-    console.log('ocurrio el siguiente error', error)
+    
 }
 }
 
-export default Payment
+const WebHooks = async(req,res)=>{
+     const paymenrId = req.query.id
+     try {
+     const res = await fetch(`https://api.mercadopago.com/v1/payments/${paymenrId}`,{
+        method: 'GET',
+        headers:{
+            'Authorization': `Bearer ${process.env.ACCES_TOKEN_MERCADOPAGO}`
+        }
+     })
+     if(res.ok){
+        const data = await res.json()
+        console.log(data)
+     }
+     res.status(200)
+     } catch (error) {
+        console.log('Ocurrio el siguiente error', error)
+        res.status(500)
+     }
+}
+
+export {Payment, WebHooks}

@@ -36,8 +36,8 @@ entonces se le indica que del directorio actual que es src,suba un nivel que ser
 y entre al directorio uploads. Los archivos solo seran servidos a las peticiones que inicien con /api*/
 // app.use('/api', express.static(path.join(__dirname,'..', 'uploads')));
 app.use(cors({
-    // origin:"https://muebleria-prohogar.netlify.app",
-    origin:"http://localhost:3000",
+    origin:"https://muebleria-prohogar.netlify.app",
+    // origin:"http://localhost:3000",
     methods:['GET','POST','PUT','DELETE'],
     /*Establece las cookies en ese dominio*/ 
     credentials:true
@@ -55,5 +55,6 @@ app.use('/api',providerProductsRoutes)
 app.use('/api',paymentRoutes)
 app.use('/api',employeesRoutes)
 app.use('/api',ordersRoutes)
+
 
 export default app
